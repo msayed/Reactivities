@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import axios from 'axios';
-import { Container, Header, Icon, List } from 'semantic-ui-react';
+import { Container } from 'semantic-ui-react';
 import { IActivity } from '../Models/activity';
 import { NavBar } from '../../features/nav/NavBar';
 import Activitydashoard from '../../features/Activities/dashboard/Activitydashoard';
@@ -15,17 +15,43 @@ const App = () => {
 
   const handleSelectedActivity = (id: string) => {
     setSelectedActivity(activities.filter((a) => a.id === id)[0]);
+    setEditMode(false);
   };
 
   const handleOpenCreateForm = () => {
     setSelectedActivity(null);
     setEditMode(true);
   };
+
+  const handelCreateActivity = (activity: IActivity) => {
+    setActivities([...activities, activity]);
+    setSelectedActivity(activity);
+    setEditMode(false);
+  };
+
+  const handeEditActivity = (activity: IActivity) => {
+    setActivities([
+      ...activities.filter((a) => a.id !== activity.id),
+      activity,
+    ]);
+    setSelectedActivity(activity);
+    setEditMode(false);
+  };
+
+  const handelDeleteActivity = (id: string) => {
+    setActivities([...activities.filter((a) => a.id !== id)]);
+  };
+
   useEffect(() => {
     axios
       .get<IActivity[]>('http://localhost:5000/api/activities')
       .then((response) => {
-        setActivities(response.data);
+        let activities: IActivity[] = [];
+        response.data.forEach((activity) => {
+          activity.date = activity.date.split('.')[0];
+          activities.push(activity);
+        });
+        setActivities(activities);
       });
   }, []);
   return (
@@ -38,6 +64,10 @@ const App = () => {
           selectedActivity={selectedActivity}
           editMode={editMode}
           setEditMode={setEditMode}
+          setSelectedActivity={setSelectedActivity}
+          CreateActivity={handelCreateActivity}
+          EditActivity={handeEditActivity}
+          deleteActivity={handelDeleteActivity}
         ></Activitydashoard>
       </Container>
     </Fragment>
