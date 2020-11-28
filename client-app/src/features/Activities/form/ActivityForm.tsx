@@ -1,4 +1,4 @@
-import React, {  FormEvent, useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import { Button, Form, Segment } from 'semantic-ui-react';
 import { IActivity } from '../../../app/Models/activity';
 import { v4 as uuid } from 'uuid';
@@ -8,6 +8,7 @@ interface IProps {
   activity: IActivity;
   CreateActivity: (activity: IActivity) => void;
   EditActivity: (activity: IActivity) => void;
+  submitting: boolean;
 }
 
 export const ActivityForm: React.FC<IProps> = ({
@@ -15,6 +16,7 @@ export const ActivityForm: React.FC<IProps> = ({
   activity: initialFormState,
   CreateActivity,
   EditActivity,
+  submitting,
 }) => {
   const intilizeForm = () => {
     if (initialFormState) {
@@ -39,7 +41,7 @@ export const ActivityForm: React.FC<IProps> = ({
         ...activity,
         id: uuid(),
       };
-      CreateActivity(activity);
+      CreateActivity(newActivity);
     } else {
       EditActivity(activity);
     }
@@ -94,6 +96,7 @@ export const ActivityForm: React.FC<IProps> = ({
           value={activity.venue}
         />
         <Button
+          loading={submitting}
           onClick={handelSubmit}
           floated="right"
           positive
