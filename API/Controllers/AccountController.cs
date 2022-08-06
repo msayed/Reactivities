@@ -96,14 +96,14 @@ namespace API.Controllers
 
             if (!result.Succeeded) return BadRequest("Problem registering user");
 
-            var origin = Request.Headers["origin"];
-            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+            // var origin = Request.Headers["origin"];
+            // var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            // token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 
-            var verifyUrl = $"{origin}/account/verifyEmail?token={token}&email={user.Email}";
-            var message = $"<p>Please click the below link to verify your email address:</p><p><a href='{verifyUrl}'>Click to verify email</a></p>";
+            // var verifyUrl = $"{origin}/account/verifyEmail?token={token}&email={user.Email}";
+            // var message = $"<p>Please click the below link to verify your email address:</p><p><a href='{verifyUrl}'>Click to verify email</a></p>";
 
-            await _emailSender.SendEmailAsync(user.Email, "Please verify email", message);
+            // await _emailSender.SendEmailAsync(user.Email, "Please verify email", message);
 
             return Ok("Registration success - please verify email");
         }
